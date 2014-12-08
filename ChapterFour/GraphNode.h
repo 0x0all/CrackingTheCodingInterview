@@ -12,6 +12,8 @@
 #include <iostream>
 #include "Node.h"
 
+using namespace std;
+
 namespace chapterFour {
 
 template<class T>
@@ -19,15 +21,13 @@ struct GraphNode : Node<T>{
 
 	GraphNode(T val): Node<T>(val),adjacent(0){}
 
-	virtual ~GraphNode(){
-		//std::cout << "~GraphNode() Value " << this->value << std::endl;
-	}
+	virtual ~GraphNode(){}
 
 	bool hasAdjacent(){
 		return !adjacent.empty();
 	}
 
-	std::vector<std::shared_ptr<GraphNode<T>>> adjacent;
+	vector<shared_ptr<GraphNode<T>>> adjacent;
 };
 
 } /* namespace four */

@@ -12,6 +12,8 @@
 #include <queue>
 #include "GraphNode.h"
 
+using namespace std;
+
 namespace chapterFour {
 
 template<class T>
@@ -19,29 +21,32 @@ class Graph {
 public:
 	Graph(){}
 	virtual ~Graph(){}
-	void addNode(std::shared_ptr<GraphNode<T>> node){
+	void addNode(shared_ptr<GraphNode<T>> node){
 		nodes.push_back(node);
 	}
 
 	void addNode(T val){
-		nodes.emplace_back(std::make_shared<GraphNode<T>>(val));
+		nodes.emplace_back(make_shared<GraphNode<T>>(val));
 	}
 
-	const std::vector<std::shared_ptr<GraphNode<T>>> getNodes() const {
+	const vector<shared_ptr<GraphNode<T>>> getNodes() const {
 		return nodes;
 	}
-
-	static bool pathExist(const Graph<T> &graph, const std::shared_ptr<GraphNode<T>> &source, const std::shared_ptr<GraphNode<T>> &dest){
+	/*
+	4.2:Given a directed graph, design an algorithm to find out whether there is a route be-
+	tween two nodes.
+	*/
+	static bool pathExist(const Graph<T> &graph, const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &dest){
 		if(source == dest)
 			return true;
 
 		enum class Tag {Unvisited, Visited, Discovered};
 
-		std::map<std::shared_ptr<GraphNode<T>>, Tag> visitationMap;
+		map<shared_ptr<GraphNode<T>>, Tag> visitationMap;
 		for(auto node : graph.getNodes())
 			visitationMap.emplace(node, Tag::Unvisited);
 
-		std::queue<std::shared_ptr<GraphNode<T>>> queue;
+		queue<shared_ptr<GraphNode<T>>> queue;
 		queue.push(source);
 
 		while(!queue.empty()){
@@ -63,7 +68,7 @@ public:
 	}
 
 private:
-	std::vector<std::shared_ptr<GraphNode<T>>> nodes;
+	vector<shared_ptr<GraphNode<T>>> nodes;
 };
 
 } /* namespace four */

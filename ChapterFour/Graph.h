@@ -16,6 +16,8 @@ using namespace std;
 
 namespace chapterFour {
 
+enum class Tag {Unvisited, Visited, Discovered};
+
 template<class T>
 class Graph {
 public:
@@ -32,42 +34,52 @@ public:
 	const vector<shared_ptr<GraphNode<T>>> getNodes() const {
 		return nodes;
 	}
+
 	/*
 	4.2:Given a directed graph, design an algorithm to find out whether there is a route be-
 	tween two nodes.
 	*/
-	static bool pathExist(const Graph<T> &graph, const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &dest){
-		if(source == dest)
+	static bool pathExist(const Graph<T> &graph, const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &destination){
+		if(source == destination)
 			return true;
+		map<shared_ptr<GraphNode<T>>, Tag> visitationMap = initVisitationMap(graph);
+		return searchBfsForPath(source, destination, visitationMap);
+	}
 
-		enum class Tag {Unvisited, Visited, Discovered};
-
+private:
+	static map<shared_ptr<GraphNode<T>>, Tag> initVisitationMap(const Graph<T> &graph){
 		map<shared_ptr<GraphNode<T>>, Tag> visitationMap;
 		for(auto node : graph.getNodes())
 			visitationMap.emplace(node, Tag::Unvisited);
+		return visitationMap;
+	}
 
+	static bool searchBfsForPath(const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &destination, map<shared_ptr<GraphNode<T>>, Tag> &visitationMap){
 		queue<shared_ptr<GraphNode<T>>> queue;
 		queue.push(source);
 
 		while(!queue.empty()){
 			auto top = queue.front();
-			queue.pop();
-			if(top == dest)
+			if(destination == top)
 				return true;
 			else{
-				for(auto adjNode : top->adjacent){
-					if(visitationMap[adjNode] == Tag::Unvisited){
-						queue.push(adjNode);
-						visitationMap[adjNode] = Tag::Discovered;
-					}
-				}
+				queue.pop();
+				pushUnvisitedNodesToQueue(queue, top, visitationMap);
 			}
 			visitationMap[top] = Tag::Visited;
 		}
 		return false;
 	}
 
-private:
+	static void pushUnvisitedNodesToQueue(queue<shared_ptr<GraphNode<T>>> &queue, const shared_ptr<GraphNode<T>> &node, map<shared_ptr<GraphNode<T>>, Tag> &visitationMap){
+		for(auto adjNode : node->adjacent){
+			if(visitationMap[adjNode] == Tag::Unvisited){
+				queue.push(adjNode);
+				visitationMap[adjNode] = Tag::Discovered;
+			}
+		}
+	}
+
 	vector<shared_ptr<GraphNode<T>>> nodes;
 };
 

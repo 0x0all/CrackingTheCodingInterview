@@ -7,6 +7,11 @@
 
 #ifndef ABSTRACTTREE_H_
 #define ABSTRACTTREE_H_
+#include <vector>
+#include <memory>
+#include "Node.h"
+
+using namespace std;
 
 namespace chapterFour {
 

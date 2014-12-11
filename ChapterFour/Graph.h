@@ -23,56 +23,62 @@ class Graph {
 public:
 	Graph(){}
 	virtual ~Graph(){}
-	void addNode(shared_ptr<GraphNode<T>> node){
-		nodes.push_back(node);
+
+	GraphNode<T>* addNode(const GraphNode<T> &node){
+		_nodes.emplace_back(new GraphNode<T>(node));
+		return _nodes.back().get();
 	}
 
-	void addNode(T val){
-		nodes.emplace_back(make_shared<GraphNode<T>>(val));
+	GraphNode<T>* addNode(T val){
+		_nodes.emplace_back(new GraphNode<T>(val));
+		return _nodes.back().get();
 	}
 
-	const vector<shared_ptr<GraphNode<T>>> getNodes() const {
-		return nodes;
+	const vector<GraphNode<T>*> getNodes() const {
+		vector<GraphNode<T>*> result;
+		for (unsigned i=0; i<_nodes.size(); i++)
+			result.push_back(_nodes.at(i).get());
+		return result;
 	}
 
-	/*
-	4.2:Given a directed graph, design an algorithm to find out whether there is a route be-
-	tween two nodes.
-	*/
-	static bool pathExist(const Graph<T> &graph, const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &destination){
-		if(source == destination)
+
+//	4.2:Given a directed graph, design an algorithm to find out whether there is a route be-
+//	tween two nodes.
+	static bool pathExist(const Graph<T> &graph, const GraphNode<T> &source, const GraphNode<T> &destination){
+		if(&source == &destination)
 			return true;
-		map<shared_ptr<GraphNode<T>>, Tag> visitationMap = initVisitationMap(graph);
+		map<GraphNode<T>*, Tag> visitationMap = initVisitationMap(graph);
 		return searchBfsForPath(source, destination, visitationMap);
 	}
 
 private:
-	static map<shared_ptr<GraphNode<T>>, Tag> initVisitationMap(const Graph<T> &graph){
-		map<shared_ptr<GraphNode<T>>, Tag> visitationMap;
+
+	static map<GraphNode<T>*, Tag> initVisitationMap(const Graph<T> &graph){
+		map<GraphNode<T>*, Tag> visitationMap;
 		for(auto node : graph.getNodes())
 			visitationMap.emplace(node, Tag::Unvisited);
 		return visitationMap;
 	}
 
-	static bool searchBfsForPath(const shared_ptr<GraphNode<T>> &source, const shared_ptr<GraphNode<T>> &destination, map<shared_ptr<GraphNode<T>>, Tag> &visitationMap){
-		queue<shared_ptr<GraphNode<T>>> queue;
-		queue.push(source);
+	static bool searchBfsForPath(const GraphNode<T> &source, const GraphNode<T> &destination, map<GraphNode<T>*, Tag> &visitationMap){
+		queue<GraphNode<T>*> queue;
+		queue.push(const_cast<GraphNode<T>*>(&source));
 
 		while(!queue.empty()){
 			auto top = queue.front();
-			if(destination == top)
+			if(&destination == top)
 				return true;
 			else{
 				queue.pop();
-				pushUnvisitedNodesToQueue(queue, top, visitationMap);
+				pushUnvisitedNodesToQueue(queue, *top, visitationMap);
 			}
 			visitationMap[top] = Tag::Visited;
 		}
 		return false;
 	}
 
-	static void pushUnvisitedNodesToQueue(queue<shared_ptr<GraphNode<T>>> &queue, const shared_ptr<GraphNode<T>> &node, map<shared_ptr<GraphNode<T>>, Tag> &visitationMap){
-		for(auto adjNode : node->adjacent){
+	static void pushUnvisitedNodesToQueue(queue<GraphNode<T>*> &queue, const GraphNode<T> &node, map<GraphNode<T>*, Tag> &visitationMap){
+		for(auto adjNode : node.adjacent){
 			if(visitationMap[adjNode] == Tag::Unvisited){
 				queue.push(adjNode);
 				visitationMap[adjNode] = Tag::Discovered;
@@ -80,7 +86,7 @@ private:
 		}
 	}
 
-	vector<shared_ptr<GraphNode<T>>> nodes;
+	vector<unique_ptr<GraphNode<T>>> _nodes;
 };
 
 } /* namespace four */

@@ -19,7 +19,7 @@ namespace chapterFour {
 template<class T>
 struct GraphNode : Node<T>{
 
-	GraphNode(T val): Node<T>(val),adjacent(0){}
+	GraphNode(T val): Node<T>(val){}
 
 	virtual ~GraphNode(){}
 
@@ -27,7 +27,7 @@ struct GraphNode : Node<T>{
 		return !adjacent.empty();
 	}
 
-	vector<shared_ptr<GraphNode<T>>> adjacent;
+	vector<GraphNode<T>*> adjacent;
 };
 
 } /* namespace four */

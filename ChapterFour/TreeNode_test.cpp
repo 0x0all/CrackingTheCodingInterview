@@ -18,8 +18,10 @@ TEST(TreeNode, ToString){
 
 TEST(TreeNode, ToStringWithChildren){
 	TreeNode<int> node(1);
-	node.leftChild.reset(new TreeNode<int>(2));
-	node.rightChild.reset(new TreeNode<int>(3));
+	TreeNode<int> two(2);
+	TreeNode<int> three(3);
+	node.leftChild = &two;
+	node.rightChild = &three;
 	ASSERT_EQ("1 L: 2 R: 3", node.toStringWithChildren());
 }
 
@@ -35,13 +37,15 @@ TEST(TreeNode, IsLeafTrue){
 
 TEST(TreeNode, IsLeafFalseLeftChild){
 	TreeNode<int> node(1);
-	node.leftChild.reset(new TreeNode<int>(2));
+	TreeNode<int> two(2);
+	node.leftChild = &two;
 	ASSERT_FALSE(node.isLeaf());
 }
 
 TEST(TreeNode, IsLeafFalseRightChild){
 	TreeNode<int> node(1);
-	node.rightChild.reset(new TreeNode<int>(2));
+	TreeNode<int> two(2);
+	node.rightChild = &two;
 	ASSERT_FALSE(node.isLeaf());
 }
 

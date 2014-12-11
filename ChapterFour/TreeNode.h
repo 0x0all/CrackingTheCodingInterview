@@ -20,17 +20,17 @@ namespace chapterFour {
 template<class T>
 struct TreeNode : Node<T> {
 
-	shared_ptr<TreeNode<T>> leftChild;
+	TreeNode<T>* leftChild;
 
-	shared_ptr<TreeNode<T>> rightChild;
+	TreeNode<T>* rightChild;
 
-	shared_ptr<TreeNode<T>> parent;
+	TreeNode<T>* parent;
 
 	TreeNode() : leftChild(nullptr), rightChild(nullptr), parent(nullptr){}
 
 	TreeNode(T val): Node<T>(val), leftChild(nullptr), rightChild(nullptr), parent(nullptr){}
 
-	TreeNode(T val, shared_ptr<TreeNode<T>> par): Node<T>(val), leftChild(nullptr), rightChild(nullptr), parent(par){}
+	TreeNode(T val, TreeNode<T>* par): Node<T>(val), leftChild(nullptr), rightChild(nullptr), parent(par){}
 
 	virtual ~TreeNode(){}
 

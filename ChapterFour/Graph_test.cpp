@@ -12,81 +12,59 @@ using namespace std;
 
 namespace chapterFour {
 
-TEST(GraphTest, Creation){
+class GraphTest: public testing::Test {
+public:
+	GraphTest() :
+			_graph(nullptr), _one(nullptr), _two(nullptr), _three(nullptr), _four(nullptr) {
+	}
+protected:
+	virtual void SetUp() {
+		_graph.reset(new Graph<int>());
+		_one   = _graph->addNode(1);
+		_two   = _graph->addNode(2);
+		_three = _graph->addNode(3);
+		_four  = _graph->addNode(4);
+		_one->adjacent.push_back(_two);
+		_one->adjacent.push_back(_three);
+		_two->adjacent.push_back(_three);
+		_three->adjacent.push_back(_four);
+		_four->adjacent.push_back(_one);
+	}
+
+	unique_ptr<Graph<int>> _graph;
+	GraphNode<int>* _one;
+	GraphNode<int>* _two;
+	GraphNode<int>* _three;
+	GraphNode<int>* _four;
+};
+
+TEST_F(GraphTest, Creation) {
 	Graph<int> graph;
 	graph.addNode(1);
 	graph.addNode(2);
-	vector<shared_ptr<GraphNode<int>>> nodes = graph.getNodes();
+	const vector<GraphNode<int>*> nodes = graph.getNodes();
 	ASSERT_EQ(1, nodes[0]->value);
 	ASSERT_EQ(2, nodes[1]->value);
 }
 
-TEST(GraphTest, PathExistSameNode)
-{
-	shared_ptr <GraphNode<int>> one = make_shared < GraphNode<int>> (1);
-	shared_ptr <GraphNode<int>> two = make_shared < GraphNode<int>> (2);
-	shared_ptr <GraphNode<int>> three = make_shared < GraphNode<int>> (3);
-	shared_ptr <GraphNode<int>> four = make_shared < GraphNode<int>> (4);
-	one->adjacent.push_back(two);
-	one->adjacent.push_back(three);
-	two->adjacent.push_back(three);
-	three->adjacent.push_back(four);
-	four->adjacent.push_back(one);
-	Graph<int> graph;
-	graph.addNode(one);
-	graph.addNode(two);
-	graph.addNode(three);
-	graph.addNode(four);
-
-	ASSERT_TRUE(Graph<int>::pathExist(graph, one, one));
+TEST_F(GraphTest, PathExistSameNode) {
+	ASSERT_TRUE(Graph<int>::pathExist(*_graph, *_one, *_one));
 }
 
-TEST(GraphTest, PathExist)
-{
-	shared_ptr <GraphNode<int>> one = make_shared < GraphNode<int>> (1);
-	shared_ptr <GraphNode<int>> two = make_shared < GraphNode<int>> (2);
-	shared_ptr <GraphNode<int>> three = make_shared < GraphNode<int>> (3);
-	shared_ptr <GraphNode<int>> four = make_shared < GraphNode<int>> (4);
-	one->adjacent.push_back(two);
-	one->adjacent.push_back(three);
-	two->adjacent.push_back(three);
-	three->adjacent.push_back(four);
-	four->adjacent.push_back(one);
-	Graph<int> graph;
-	graph.addNode(one);
-	graph.addNode(two);
-	graph.addNode(three);
-	graph.addNode(four);
-
-	ASSERT_TRUE(Graph<int>::pathExist(graph, one, two));
-	ASSERT_TRUE(Graph<int>::pathExist(graph, one, three));
-	ASSERT_TRUE(Graph<int>::pathExist(graph, one, four));
-	ASSERT_TRUE(Graph<int>::pathExist(graph, two, four));
+TEST_F(GraphTest, PathExist) {
+	ASSERT_TRUE(Graph<int>::pathExist(*_graph, *_one, *_two));
+	ASSERT_TRUE(Graph<int>::pathExist(*_graph, *_one, *_three));
+	ASSERT_TRUE(Graph<int>::pathExist(*_graph, *_one, *_four));
+	ASSERT_TRUE(Graph<int>::pathExist(*_graph, *_two, *_four));
 }
 
-TEST(GraphTest, PathNotExist)
-{
-	shared_ptr <GraphNode<int>> one = make_shared < GraphNode<int>> (1);
-	shared_ptr <GraphNode<int>> two = make_shared < GraphNode<int>> (2);
-	shared_ptr <GraphNode<int>> three = make_shared < GraphNode<int>> (3);
-	shared_ptr <GraphNode<int>> four = make_shared < GraphNode<int>> (4);
-	shared_ptr <GraphNode<int>> five = make_shared < GraphNode<int>> (5);
-	one->adjacent.push_back(two);
-	one->adjacent.push_back(three);
-	two->adjacent.push_back(three);
-	three->adjacent.push_back(four);
-	four->adjacent.push_back(one);
-	Graph<int> graph;
-	graph.addNode(one);
-	graph.addNode(two);
-	graph.addNode(three);
-	graph.addNode(four);
-	graph.addNode(five);
+TEST_F(GraphTest, PathNotExist) {
+	GraphNode<int>* five = _graph->addNode(5);
 
-	ASSERT_FALSE(Graph<int>::pathExist(graph, one, five));
-	ASSERT_FALSE(Graph<int>::pathExist(graph, two, five));
-	ASSERT_FALSE(Graph<int>::pathExist(graph, three, five));
-	ASSERT_FALSE(Graph<int>::pathExist(graph, four, five));
+	ASSERT_FALSE(Graph<int>::pathExist(*_graph, *_one,   *five));
+	ASSERT_FALSE(Graph<int>::pathExist(*_graph, *_two,   *five));
+	ASSERT_FALSE(Graph<int>::pathExist(*_graph, *_three, *five));
+	ASSERT_FALSE(Graph<int>::pathExist(*_graph, *_four,  *five));
 }
 
 } /* namespace four */

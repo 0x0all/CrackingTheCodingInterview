@@ -7,7 +7,7 @@
 
 #include "RuntimeException.h"
 
-namespace chapterThree {
+namespace chapterTwo {
 
 RuntimeException::RuntimeException() {}
 

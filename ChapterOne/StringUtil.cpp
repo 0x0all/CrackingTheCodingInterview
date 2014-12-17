@@ -34,6 +34,10 @@ bool StringUtil::hasAllUniqueCharacters(const char *string) {
 	return true;
 }
 
+bool StringUtil::isNullChar(const char *string){
+	return *string == '\0' ? true : false;
+}
+
 bool StringUtil::charIsKnown(bool *charMap, const char character){
 	if (charMap[(int)character])
 		return true;
@@ -41,15 +45,11 @@ bool StringUtil::charIsKnown(bool *charMap, const char character){
 	return false;
 }
 
-bool StringUtil::isNullChar(const char *string){
-	return *string == '\0' ? true : false;
-}
-
 bool StringUtil::hasAllUniqueCharacters(const std::string& str) {
 	auto begin = str.cbegin();
 	auto end = str.cend();
-	for (; begin != end; ++begin) {
-		if (find(begin + 1, end, *begin) != end)
+	for (; begin != end; begin++) {
+		if (find(begin +1, end, *begin) != end)
 			return false;
 	}
 	return true;
@@ -58,7 +58,7 @@ bool StringUtil::hasAllUniqueCharacters(const std::string& str) {
 const char* StringUtil::reverseInPlace(char *string) {
 	char *origin = string;
 	char *last = string;
-	if (string) {
+	if (*string) {
 		advanceToLastCharacter(last);
 		while (string < last) {
 			swap(string++, last--);
@@ -90,8 +90,8 @@ bool StringUtil::innerOccuranceRemoved(const char candidate, char * string){
 	bool dublicateRemoved = false;
 	while (*string) {
 		if (candidate == *string) {
-			dublicateRemoved = true;
 			shiftStringLeft(string);
+			dublicateRemoved = true;
 		} else
 			++string;
 	}

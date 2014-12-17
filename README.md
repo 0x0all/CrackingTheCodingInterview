@@ -15,6 +15,8 @@ Chapter Three
 
 ThreeStacksInOne.h : 3.1, 3.6
 
+MyQueue.h: 3.5
+
 StackWithMin.h : 3.2
 
 SetOfStacks.h : 3.3

@@ -6,16 +6,52 @@
  */
 
 #include <algorithm>
+#include <sstream>
 #include "CallHandle.h"
+#include "Fresher.h"
+#include "TechLead.h"
+#include "ProductManager.h"
 
 using namespace std;
 
 namespace chapterSeven {
 
-CallHandle::CallHandle(): _freeEmployees(), _pendingCalls(LEVELS){
+
+CallHandle::CallHandle(int priorityLevels, int fresher_num, int techLead_num, int producntManager_num)
+: _pendingCalls(priorityLevels){
+	initFreshers(fresher_num);
+	initTechLeads(techLead_num);
+	initProductManagers(producntManager_num);
 }
 
 CallHandle::~CallHandle() {
+}
+
+void CallHandle::initFreshers(int fresher_num) {
+	for (int i = 0; i < fresher_num; i++) {
+		stringstream sstm;
+		sstm << "Fresher_" << i + 1;
+		Fresher fresher(sstm.str());
+		_freeEmployees.push_back(fresher);
+	}
+}
+
+void CallHandle::initTechLeads(int techLead_num) {
+	for (int i = 0; i < techLead_num; i++) {
+		stringstream sstm;
+		sstm << "TechLead_" << i + 1;
+		TechLead techLead(sstm.str());
+		_freeEmployees.push_back(techLead);
+	}
+}
+
+void CallHandle::initProductManagers(int producntManager_num) {
+	for (int i = 0; i < producntManager_num; i++) {
+		stringstream sstm;
+		sstm << "ProductManager_" << i + 1;
+		ProductManager productManager(sstm.str());
+		_freeEmployees.push_back(productManager);
+	}
 }
 
 void CallHandle::addEmployee(const Employee &employee){

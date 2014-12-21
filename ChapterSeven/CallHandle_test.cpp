@@ -14,79 +14,55 @@
 namespace chapterSeven {
 
 TEST(CallHandleTest, AddEmployee){
-	CallHandle handle;
-	Fresher fresher("one");
+	CallHandle handle(3, 5, 1, 1);
 	RankedCall firstCall(1);
-	handle.addEmployee(fresher);
-	ASSERT_EQ(fresher.getId(), handle.getCallHandler(firstCall)->getId());
+	ASSERT_EQ("Fresher_1", handle.getCallHandler(firstCall)->getId());
 }
 
 TEST(CallHandleTest, AddEmployeeCanNotHandle){
-	CallHandle handle;
-	Fresher fresher("one");
-	RankedCall firstCall(2);
-	handle.addEmployee(fresher);
+	CallHandle handle(3, 5, 1, 1);
+	RankedCall firstCall(4);
 	ASSERT_EQ(nullptr, handle.getCallHandler(firstCall));
 }
 
 TEST(CallHandleTest, HandleLevelOne){
-	CallHandle handle;
-	Fresher fresher("fresher");
-	TechLead techLead("techLead");
-	ProductManager productManager("productManager");
+	CallHandle handle(3, 5, 1, 1);
 	RankedCall firstCall(1);
-	handle.addEmployee(fresher);
-	handle.addEmployee(techLead);
-	handle.addEmployee(productManager);
 
 	Employee *emp = handle.getCallHandler(firstCall);
 	emp->handleCall(firstCall, handle);
 
-	ASSERT_EQ(fresher.getId(), firstCall.HandledBy);
+	ASSERT_EQ("Fresher_1", firstCall.HandledBy);
 }
 
 TEST(CallHandleTest, HandleLevelTwo){
-	CallHandle handle;
-	Fresher fresher("fresher");
-	TechLead techLead("techLead");
-	ProductManager productManager("productManager");
+	CallHandle handle(3, 5, 1, 1);
 	DispatchedToLevelTwoCall dispTwo;
-	handle.addEmployee(fresher);
-	handle.addEmployee(techLead);
-	handle.addEmployee(productManager);
 
 	Employee *emp = handle.getCallHandler(dispTwo);
 	emp->handleCall(dispTwo, handle);
 
-	ASSERT_EQ(techLead.getId(), dispTwo.HandledBy);
+	ASSERT_EQ("TechLead_1", dispTwo.HandledBy);
 }
 
 TEST(CallHandleTest, HandleLevelThree){
-	CallHandle handle;
-	Fresher fresher("fresher");
-	TechLead techLead("techLead");
-	ProductManager productManager("productManager");
+	CallHandle handle(3, 5, 1, 1);
 	DispatchedToLevelThreeCall dispThree;
-	handle.addEmployee(fresher);
-	handle.addEmployee(techLead);
-	handle.addEmployee(productManager);
 
 	Employee *emp = handle.getCallHandler(dispThree);
 	emp->handleCall(dispThree, handle);
 
-	ASSERT_EQ(productManager.getId(), dispThree.HandledBy);
+	ASSERT_EQ("ProductManager_1", dispThree.HandledBy);
 }
 
-TEST(CallHandleTest, PendingCallLevelTwo){
-	CallHandle handle;
-	Fresher fresher("fresher");
+TEST(CallHandleTest, NoPendingCalls){
+	CallHandle handle(3, 5, 1, 1);
 	DispatchedToLevelTwoCall dispTwo;
-	handle.addEmployee(fresher);
 
 	Employee *emp = handle.getCallHandler(dispTwo);
 	emp->handleCall(dispTwo, handle);
 
-	ASSERT_EQ(1, handle.getNumOfPendingCalls());
+	ASSERT_EQ(0, handle.getNumOfPendingCalls());
 }
 
 } /* namespace chapterSeven */

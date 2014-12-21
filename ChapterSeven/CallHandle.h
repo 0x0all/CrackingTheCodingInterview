@@ -17,9 +17,8 @@ namespace chapterSeven {
 
 class CallHandle {
 public:
-	CallHandle();
+	CallHandle(int priorityLevels, int fresher_num, int techLead_num, int producntManager_num);
 	virtual ~CallHandle();
-	static const int LEVELS = 3;
 	void addEmployee(const Employee &employee);
 	void dispatchCall(Call &call);
 	Employee* getCallHandler(const Call &call);
@@ -28,6 +27,10 @@ public:
 private:
 	vector<Employee> _freeEmployees;
 	vector<vector<Call*>>  _pendingCalls;
+
+	void initFreshers(int fresher_num);
+	void initTechLeads(int techLead_num);
+	void initProductManagers(int producntManager_num);
 };
 
 } /* namespace chapterSeven */

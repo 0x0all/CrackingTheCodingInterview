@@ -8,6 +8,7 @@
 #ifndef BITMANIPULATOR_H_
 #define BITMANIPULATOR_H_
 #include <limits>
+#include <math.h>
 
 using namespace std;
 
@@ -24,6 +25,32 @@ public:
 		unsigned int mask = left | right;
 		return (original & mask) | (subNum << startPos);
 	}
+
+	static unsigned int getNextBiggerWithSameNumberOfOnes(unsigned int original){
+		unsigned int mask = 3;
+		for(int i = 0; i < 30; i++){
+			if((original & mask) == pow(2,i)){
+				unsigned int andMask = numeric_limits<unsigned int>::max() - pow(2,i);
+				unsigned int orMask = pow(2,i+1);
+				return (original & andMask) | orMask;
+			}
+			mask = mask << 1;
+		}
+		return 0;
+	}
+
+	static unsigned int getNextSmallerWithSameNumberOfOnes(unsigned int original){
+			unsigned int mask = 3;
+			for(int i = 0; i < 30; i++){
+				if((original & mask) == pow(2,i+1)){
+					unsigned int andMask = numeric_limits<unsigned int>::max() - pow(2,i+1);
+					unsigned int orMask = pow(2,i);
+					return (original & andMask) | orMask;
+				}
+				mask = mask << 1;
+			}
+			return 0;
+		}
 };
 
 } /* namespace chapterFive */

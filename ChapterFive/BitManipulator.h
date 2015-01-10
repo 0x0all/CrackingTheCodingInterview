@@ -27,30 +27,75 @@ public:
 	}
 
 	static unsigned int getNextBiggerWithSameNumberOfOnes(unsigned int original){
-		unsigned int mask = 3;
-		for(int i = 0; i < 30; i++){
-			if((original & mask) == pow(2,i)){
-				unsigned int andMask = numeric_limits<unsigned int>::max() - pow(2,i);
-				unsigned int orMask = pow(2,i+1);
-				return (original & andMask) | orMask;
+		int index = 0;
+		while(index < 31){
+			if(getBitAt(original, index) == 1 && getBitAt(original, index+1) == 0){
+				turnOnAt(original, index+1);
+				turnOffAt(original, index);
+				return shrink(original, index);
 			}
-			mask = mask << 1;
+			++index;
 		}
 		return 0;
 	}
 
 	static unsigned int getNextSmallerWithSameNumberOfOnes(unsigned int original){
-			unsigned int mask = 3;
-			for(int i = 0; i < 30; i++){
-				if((original & mask) == pow(2,i+1)){
-					unsigned int andMask = numeric_limits<unsigned int>::max() - pow(2,i+1);
-					unsigned int orMask = pow(2,i);
-					return (original & andMask) | orMask;
-				}
-				mask = mask << 1;
+		int index = 0;
+		while(index < 32){
+			if(getBitAt(original, index) == 0 && getBitAt(original,index+1) == 1){
+				turnOnAt(original, index);
+				turnOffAt(original, index+1);
+				return enlarge(original, index);
 			}
-			return 0;
+			++index;
 		}
+		return 0;
+	}
+private:
+	static unsigned int getBitAt(unsigned int number, int index){
+		return (number & (1 << index)) > 0 ? 1 : 0;
+	}
+
+	static void turnOnAt(unsigned int &number, int index){
+		setBit(number, index, true);
+	}
+
+	static void turnOffAt(unsigned int &number, int index){
+		setBit(number, index, false);
+	}
+
+	static void setBit(unsigned int &number, int index, bool isTrue){
+		if(isTrue)
+			number = number  | (1 << index);
+		else
+			number = number & ~(1 << index);
+	}
+
+	static unsigned int shrink(unsigned int original, int suffixPosition){
+		int index = 0;
+		while(index < suffixPosition){
+			if(getBitAt(original, index) == 0 && getBitAt(original,index+1) == 1){
+				turnOnAt(original, index);
+				turnOffAt(original,index+1);
+				original = shrink(original, index);
+			}
+			++index;
+		}
+		return original;
+	}
+
+	static unsigned int enlarge(unsigned int original, int suffixPosition){
+		int index = suffixPosition;
+		while(index > 0){
+			if(getBitAt(original, index) == 0 && getBitAt(original, index-1) == 1){
+				turnOnAt(original, index);
+				turnOffAt(original,index-1);
+				original = enlarge(original,suffixPosition);
+			}
+			--index;
+		}
+		return original;
+	}
 };
 
 } /* namespace chapterFive */

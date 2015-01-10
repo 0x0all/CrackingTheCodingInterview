@@ -50,6 +50,11 @@ TEST(BitManipulatorTest, NextBiggerEleven){
 	ASSERT_EQ(13, BitManipulator::getNextBiggerWithSameNumberOfOnes(num));
 }
 
+TEST(BitManipulatorTest, NextBiggerTwentyEight){
+	unsigned int num = 28;
+	ASSERT_EQ(35, BitManipulator::getNextBiggerWithSameNumberOfOnes(num));
+}
+
 TEST(BitManipulatorTest, NextBiggerMax){
 	unsigned int num = numeric_limits<unsigned int>::max()-1;
 	ASSERT_EQ(0, BitManipulator::getNextBiggerWithSameNumberOfOnes(num));
@@ -68,6 +73,11 @@ TEST(BitManipulatorTest, NextSmallerEleven){
 TEST(BitManipulatorTest, NextSmallerSixtyFour){
 	unsigned int num = 64;
 	ASSERT_EQ(32, BitManipulator::getNextSmallerWithSameNumberOfOnes(num));
+}
+
+TEST(BitManipulatorTest, NextSmallerThertyFive){
+	unsigned int num = 35;
+	ASSERT_EQ(28, BitManipulator::getNextSmallerWithSameNumberOfOnes(num));
 }
 
 TEST(BitManipulatorTest, NextSmallerMaxWithSmaller){

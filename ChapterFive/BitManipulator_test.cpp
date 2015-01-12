@@ -90,4 +90,38 @@ TEST(BitManipulatorTest, NextSmallerMaxWithoutSmaller){
 	ASSERT_EQ(0, BitManipulator::getNextSmallerWithSameNumberOfOnes(num));
 }
 
+TEST(BitManipulatorTest, FindNumberOfBitChangesZero){
+	unsigned int source = 2;
+	unsigned int target = 2;
+	ASSERT_EQ(0, BitManipulator::findNumberOrBitChanges(source, target));
+}
+
+TEST(BitManipulatorTest, FindNumberOfBitChangesOne){
+	unsigned int source = 3;
+	unsigned int target = 2;
+	ASSERT_EQ(1, BitManipulator::findNumberOrBitChanges(source, target));
+}
+
+TEST(BitManipulatorTest, FindNumberOfBitChangesTwo){
+	unsigned int source = 31;
+	unsigned int target = 14;
+	ASSERT_EQ(2, BitManipulator::findNumberOrBitChanges(source, target));
+}
+
+TEST(BitManipulatorTest, FindNumberOfBitChangesThertyTwo){
+	unsigned int source = numeric_limits<unsigned int>::max();
+	unsigned int target = 0;
+	ASSERT_EQ(32, BitManipulator::findNumberOrBitChanges(source, target));
+}
+
+TEST(BitManipulatorTest, SwapEvenOdd){
+	unsigned int source = 5;
+	ASSERT_EQ(10, BitManipulator::swapEvenOdd(source));
+}
+
+TEST(BitManipulatorTest, SwapEvenOddSecond){
+	unsigned int source = 10;
+	ASSERT_EQ(5, BitManipulator::swapEvenOdd(source));
+}
+
 } /* namespace chapterFive */

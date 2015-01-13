@@ -9,6 +9,9 @@
 #define BITMANIPULATOR_H_
 #include <limits>
 #include <math.h>
+#include <sstream>
+#include <stack>
+#include "StrangeArray.h"
 
 using namespace std;
 
@@ -27,6 +30,28 @@ public:
 		unsigned int right = (1 << (startPos)) - 1;
 		unsigned int mask = left | right;
 		return (original & mask) | (subNum << startPos);
+	}
+
+//	5.2 Given a (decimal - e.g. 3.72) number that is passed in as a string, print the binary rep-
+//	resentation. If the number can not be represented accurately in binary, print “ERROR”
+	static string printDecimal(string number){
+		unsigned int pointPos = number.find(".");
+		if(pointPos == string::npos)
+			return "ERROR";
+
+		int integerPart = parseIntPart(number, pointPos);
+		double decimalPart = parseDecimalPart(number, pointPos);
+		stack<string> intBitStack = createIntBitStack(integerPart);
+		stack<string> decimalBitStack = createDecimalBitStack(decimalPart);
+		if(decimalBitStack.size() > 32)
+			return "ERROR";
+
+		stringstream result;
+		pushStackToStream(intBitStack, result);
+		result << ".";
+		pushStackToStream(decimalBitStack, result);
+
+		return result.str();
 	}
 
 //	5.3 Given an integer, print the next smallest and next largest number that have the same
@@ -71,7 +96,72 @@ public:
 		return ((source >> 1) & 0x55555555) | ((source << 1) & 0xaaaaaaaa);
 	}
 
+//	5.6 An array A[1...n] contains all the integers from 0 to n except for one number which is
+//	missing. In this problem, we cannot access an entire integer in A with a single opera-
+//	tion. The elements of A are represented in binary, and the only operation we can use
+//	to access them is “fetch the jth bit of A[i]”, which takes constant time. Write code to
+//	find the missing integer.
+	static int findMissingInt(StrangeArray array){
+		int maxInt = array.size();
+		int correntSum = maxInt * (maxInt+1) / 2;
+		int sum = 0;
+		for(unsigned int index = 0; index < array.size(); index++){
+			for(unsigned int bit =0; bit<32; bit++){
+						sum += array.fetch(index, bit) * pow(2, bit);
+					}
+		}
+		return correntSum - sum;
+	}
+
 private:
+	static int parseIntPart(const string& number, unsigned int pointPos) {
+		string intPart = number.substr(0, pointPos);
+		int integerPart = stoi(intPart);
+		return integerPart;
+	}
+
+	static double parseDecimalPart(const string& number, unsigned int pointPos) {
+		string decPart = "0" + number.substr(pointPos);
+		double decimalPart = stod(decPart);
+		return decimalPart;
+	}
+
+	static stack<string> createIntBitStack(int integerPart){
+		stack<string> intBitStack;
+		while(integerPart > 0){
+			if(integerPart % 2 == 0)
+				intBitStack.push("0");
+			else
+				intBitStack.push("1");
+			integerPart >>= 1;
+		}
+		return intBitStack;
+	}
+
+	static stack<string> createDecimalBitStack(double decimalPart){
+		stack<string> decimalBitStack;
+		while(decimalPart > 0){
+			double r = decimalPart;
+			r *= 2;
+			if(r >= 1){
+				decimalBitStack.push("1");
+				decimalPart = r - 1;
+			}
+			else{
+				decimalBitStack.push("0");
+				decimalPart = r;
+			}
+		}
+		return decimalBitStack;
+	}
+
+	static void pushStackToStream(stack<string>& stackToPush, stringstream& result) {
+		while (!stackToPush.empty()) {
+			result << stackToPush.top();
+			stackToPush.pop();
+		}
+	}
+
 	static unsigned int getBitAt(unsigned int number, int index){
 		return (number & (1 << index)) > 0 ? 1 : 0;
 	}
@@ -128,6 +218,8 @@ private:
 		}
 		return ones;
 	}
+
+
 };
 
 } /* namespace chapterFive */

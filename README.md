@@ -29,7 +29,7 @@ BinaryTree.h : 4.1, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8
 
 Chapter Five
 
-BitManipulator.h 5.1 5.3 5.5
+BitManipulator.h 5.1 5.3 5.5 5.6
 
 Chapter Seven
 

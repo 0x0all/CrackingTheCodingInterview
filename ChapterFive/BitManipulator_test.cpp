@@ -30,6 +30,17 @@ TEST(BitManipulatorTest, MakeSubstringHappyFlowThree){
 	ASSERT_EQ(maxInt - 8, BitManipulator::makeSubstring(maxInt, five, 2, 4));
 }
 
+TEST(BitManipulatorTest, PrintDecimalHappyFlow){
+	string number = "2.5";
+	ASSERT_EQ("10.1", BitManipulator::printDecimal(number));
+}
+
+TEST(BitManipulatorTest, PrintDecimalNoRepresentation){
+	string number = "2.3";
+	ASSERT_EQ("ERROR", BitManipulator::printDecimal(number));
+}
+
+
 TEST(BitManipulatorTest, NextBiggerOne){
 	unsigned int num = 1;
 	ASSERT_EQ(2, BitManipulator::getNextBiggerWithSameNumberOfOnes(num));
@@ -122,6 +133,16 @@ TEST(BitManipulatorTest, SwapEvenOdd){
 TEST(BitManipulatorTest, SwapEvenOddSecond){
 	unsigned int source = 10;
 	ASSERT_EQ(5, BitManipulator::swapEvenOdd(source));
+}
+
+TEST(BitManipulatorTest, FindMissingInt){
+	StrangeArray data(5,4);
+	ASSERT_EQ(4, BitManipulator::findMissingInt(data));
+}
+
+TEST(BitManipulatorTest, FindMissingIntSecond){
+	StrangeArray data(132,7);
+	ASSERT_EQ(7, BitManipulator::findMissingInt(data));
 }
 
 } /* namespace chapterFive */

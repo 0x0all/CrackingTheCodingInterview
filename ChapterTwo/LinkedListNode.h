@@ -12,6 +12,9 @@
 #include "RuntimeException.h"
 
 namespace chapterTwo {
+
+using namespace std;
+
 template<class T>
 class LinkedListNode {
 public:

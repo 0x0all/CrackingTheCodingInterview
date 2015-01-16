@@ -96,7 +96,7 @@ public:
 		return ((source >> 1) & 0x55555555) | ((source << 1) & 0xaaaaaaaa);
 	}
 
-//	5.6 An array A[1...n] contains all the integers from 0 to n except for one number which is
+//	5.7 An array A[1...n] contains all the integers from 0 to n except for one number which is
 //	missing. In this problem, we cannot access an entire integer in A with a single opera-
 //	tion. The elements of A are represented in binary, and the only operation we can use
 //	to access them is “fetch the jth bit of A[i]”, which takes constant time. Write code to
